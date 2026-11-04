@@ -7,7 +7,7 @@ interface Props {
   label: string;
 }
 
-/** Marca de completado: círculo discreto de 44 px (área táctil cómoda). */
+/** Marca de completado elegante, táctil (44 px) y discreta. */
 export function CheckButton({ checked, onToggle, label }: Props) {
   return (
     <button
@@ -16,11 +16,17 @@ export function CheckButton({ checked, onToggle, label }: Props) {
       aria-checked={checked}
       aria-label={label}
       onClick={onToggle}
-      className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border transition-colors ${
-        checked ? 'border-accent bg-accent text-bg' : 'border-line text-transparent'
-      }`}
+      className="group -mr-2 -mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
     >
-      <Check size={20} strokeWidth={2.25} aria-hidden="true" />
+      <span
+        className={`flex h-6 w-6 items-center justify-center rounded-full border transition-colors ${
+          checked
+            ? 'border-accent bg-accent/15 text-accent'
+            : 'border-line bg-surface text-transparent group-hover:border-muted/60'
+        }`}
+      >
+        <Check size={13} strokeWidth={2.2} aria-hidden="true" />
+      </span>
     </button>
   );
 }

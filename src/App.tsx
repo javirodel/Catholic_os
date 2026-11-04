@@ -20,16 +20,24 @@ export default function App({ getNow = realNow }: Props) {
   const currentIndex = MYSTERY_STEPS.findIndex((s) => !doneSet.has(s));
 
   return (
-    <main className="mx-auto w-full max-w-[40rem] px-5 pb-16 pt-10 sm:pt-14">
+    <main className="mx-auto w-full max-w-[38rem] px-5 pb-20 pt-10 sm:px-6 sm:pt-14">
       <Header dayLabel={day.label} setTitle={set.title} completed={doneSet.size} />
 
       <Opening doneSet={doneSet} onToggle={toggle} />
 
-      <section aria-labelledby="misterios" className="mt-10">
-        <h2 id="misterios" className="font-sans text-xs uppercase tracking-[0.25em] text-muted">
-          {set.title}
-        </h2>
-        <div className="mt-4 space-y-4">
+      <section aria-labelledby="misterios" className="mt-14">
+        <div className="flex items-center gap-4">
+          <span className="h-px flex-1 bg-line/70" />
+          <h2
+            id="misterios"
+            className="font-sans text-[0.6875rem] uppercase tracking-[0.32em] text-accent"
+          >
+            Los cinco misterios
+          </h2>
+          <span className="h-px flex-1 bg-line/70" />
+        </div>
+
+        <div className="mt-6 space-y-5">
           {set.mysteries.map((m, i) => (
             <MysteryCard
               key={m.name}
@@ -45,7 +53,7 @@ export default function App({ getNow = realNow }: Props) {
 
       <Closing done={doneSet.has(FINAL_STEP)} onToggle={() => toggle(FINAL_STEP)} />
 
-      <footer className="mt-12 text-center">
+      <footer className="mt-14 border-t border-line/60 pt-8 text-center">
         <ResetButton onConfirm={reset} />
       </footer>
     </main>

@@ -14,33 +14,45 @@ const ITEMS = [
   {
     step: 'inicio-avemarias',
     prayer: { ...PRAYERS.avemaria, title: 'Tres Avemarías' },
-    note: 'Se reza tres veces',
+    note: 'Tres veces',
   },
   { step: 'inicio-gloria', prayer: PRAYERS.gloria, note: undefined },
 ] as const;
 
 export function Opening({ doneSet, onToggle }: Props) {
   return (
-    <section aria-labelledby="inicio" className="mt-10">
-      <h2 id="inicio" className="font-sans text-xs uppercase tracking-[0.25em] text-muted">
-        Inicio del Rosario
-      </h2>
-      <div className="mt-4 space-y-4">
-        {ITEMS.map(({ step, prayer, note }) => (
-          <article key={step} className="rounded-lg border border-line bg-surface p-5">
-            <PrayerText
-              prayer={prayer}
-              note={note}
-              action={
-                <CheckButton
-                  checked={doneSet.has(step)}
-                  onToggle={() => onToggle(step)}
-                  label={`Marcar como rezado: ${prayer.title}`}
-                />
-              }
-            />
-          </article>
-        ))}
+    <section aria-labelledby="inicio" className="mt-12">
+      <div className="flex items-center gap-4">
+        <span className="h-px flex-1 bg-line/70" />
+        <h2
+          id="inicio"
+          className="font-sans text-[0.6875rem] uppercase tracking-[0.32em] text-accent"
+        >
+          Oraciones iniciales
+        </h2>
+        <span className="h-px flex-1 bg-line/70" />
+      </div>
+
+      <div className="mt-6 divide-y divide-line/60 rounded-xl border border-line/80 bg-surface px-5 sm:px-7">
+        {ITEMS.map(({ step, prayer, note }) => {
+          const isDone = doneSet.has(step);
+          return (
+            <article key={step} className="py-6 first:pt-6 last:pb-6">
+              <PrayerText
+                prayer={prayer}
+                note={note}
+                dimmed={isDone}
+                action={
+                  <CheckButton
+                    checked={isDone}
+                    onToggle={() => onToggle(step)}
+                    label={`Marcar como rezado: ${prayer.title}`}
+                  />
+                }
+              />
+            </article>
+          );
+        })}
       </div>
     </section>
   );
