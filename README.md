@@ -12,8 +12,8 @@ PWA personal, oscura y contemplativa, para rezar el Santo Rosario. React + TypeS
    git push -u origin main
    ```
 2. En GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-3. El workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) instala, ejecuta las pruebas, compila y publica. En 1–2 minutos estará en
-   `https://<tu-usuario>.github.io/catholic_os/`.
+3. El workflow [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) instala, compila y publica. En 1–2 minutos estará en
+   `https://<tu-usuario>.github.io/Catholic_os/`.
 
 Cada `git push` a `main` vuelve a desplegar. El nombre del repositorio da igual: la ruta base se calcula automáticamente.
 
@@ -21,7 +21,6 @@ Cada `git push` a `main` vuelve a desplegar. El nombre del repositorio da igual:
 
 - **Settings → Pages → Enforce HTTPS**: activado.
 - **Settings → Actions → General → Workflow permissions**: *Read repository contents* (el workflow solo pide permisos de escritura en Pages durante el despliegue).
-- **Settings → Code security**: activar *Dependabot alerts* y *Secret scanning* (ya hay un `dependabot.yml`).
 - Activa la verificación en dos pasos (2FA) en tu cuenta de GitHub: es la llave real de tu web.
 
 ## Seguridad y privacidad
@@ -39,9 +38,9 @@ Qué se ha hecho:
 | Cero terceros | Sin analítica, sin fuentes de Google, sin CDNs, sin imágenes externas. Tipografía del sistema. Verificado: 0 peticiones externas. |
 | CSP estricta | `default-src 'none'`, solo `'self'` para scripts, estilos, imágenes, manifest y worker. Sin estilos ni scripts inline, sin `eval`, `object-src`/`frame-src`/`form-action`/`base-uri` bloqueados. |
 | Trusted Types | `require-trusted-types-for 'script'`: el navegador bloquea cualquier inyección de HTML/scripts. La única excepción permitida es la URL exacta de `sw.js` ([`trustedTypes.ts`](src/lib/trustedTypes.ts)). |
-| Sin rastro en buscadores | `noindex, nofollow, noarchive…` y `robots.txt` con `Disallow: /`. `Referrer: no-referrer`. |
+| Sin rastro en buscadores | `<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">` y `Referrer: no-referrer`. |
 | Service Worker mínimo | Solo precachea los archivos propios del build; sin `runtimeCaching`, nunca guarda respuestas de terceros. |
-| Cadena de suministro | Dependencias mínimas, `npm ci --ignore-scripts` con `package-lock.json`, sin sourcemaps, workflow con permisos mínimos y `persist-credentials: false`, Dependabot mensual. |
+| Cadena de suministro | Dependencias mínimas, `npm ci --ignore-scripts` con `package-lock.json`, sin sourcemaps, workflow con permisos mínimos y `persist-credentials: false`. |
 | Sin secretos | El repositorio no contiene contraseñas ni credenciales, ni las necesita. |
 
 Sobre `npm audit`: los avisos que pueda mostrar vienen de herramientas de **compilación** (`workbox-build`), que se ejecutan en tu ordenador o en GitHub Actions con tus propios archivos y no se incluyen en la web. `npm audit --omit=dev` da 0 vulnerabilidades. **No ejecutes `npm audit fix --force`**: degrada `vite-plugin-pwa` y rompe el proyecto.
@@ -51,7 +50,6 @@ Sobre `npm audit`: los avisos que pueda mostrar vienen de herramientas de **comp
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm test           # pruebas
 npm run typecheck  # TypeScript estricto
 npm run build      # → dist/
 npx vite preview   # sirve dist/ (el Service Worker solo funciona con build)
