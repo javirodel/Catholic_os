@@ -8,12 +8,12 @@ interface Props {
 
 export function Header({ dayLabel, setTitle, completed }: Props) {
   return (
-    <header className="border-b border-line/70 pb-8 pt-2 text-center">
-      <div className="mx-auto mb-5 flex flex-col items-center">
+    <header className="border-b border-line/60 pb-6 pt-1 text-center">
+      <div className="mx-auto mb-3.5 flex flex-col items-center">
         <svg
           aria-hidden="true"
           viewBox="0 0 24 24"
-          className="h-4 w-4 text-accent/85"
+          className="h-3.5 w-3.5 text-accent/80"
           fill="none"
           stroke="currentColor"
           strokeWidth="1.5"
@@ -21,18 +21,18 @@ export function Header({ dayLabel, setTitle, completed }: Props) {
         >
           <path d="M12 3v18M6.5 8.5h11" />
         </svg>
-        <p className="mt-3 font-sans text-[0.6875rem] uppercase tracking-[0.38em] text-accent">
+        <p className="mt-2 font-sans text-[0.625rem] uppercase tracking-[0.38em] text-accent">
           Catholic OS
         </p>
       </div>
 
-      <p className="font-serif text-base italic text-muted">{dayLabel}</p>
-      <h1 className="mt-1.5 font-serif text-[2.125rem] font-normal leading-tight tracking-tight text-ink sm:text-[2.375rem]">
+      <p className="font-serif text-[0.9375rem] italic text-muted">{dayLabel}</p>
+      <h1 className="mt-1 font-serif text-[1.35rem] font-normal tracking-wide text-ink">
         {setTitle}
       </h1>
 
-      <p className="mt-4 font-sans text-xs tracking-wider text-muted">
-        Progreso: {completed} de {TOTAL_STEPS} pasos
+      <p className="mt-3 font-sans text-[0.6875rem] tracking-wider text-muted/85">
+        {completed} de {TOTAL_STEPS}
       </p>
     </header>
   );

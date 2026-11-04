@@ -64,7 +64,7 @@ export function MysteryCard({ number, mystery, done, current, onToggle }: Props)
         </div>
 
         <h3
-          className={`mt-1.5 font-serif text-[1.4rem] font-normal leading-snug ${
+          className={`mt-1.5 font-serif text-[1.2rem] font-normal leading-snug ${
             done && !current ? 'text-muted' : 'text-ink'
           }`}
         >
