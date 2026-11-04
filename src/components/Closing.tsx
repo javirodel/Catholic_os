@@ -1,13 +1,13 @@
-import { Check } from 'lucide-react';
 import { PRAYERS } from '../data/prayers';
 import { PrayerText } from './PrayerText';
 
 interface Props {
   done: boolean;
+  current: boolean;
   onToggle: () => void;
 }
 
-export function Closing({ done, onToggle }: Props) {
+export function Closing({ done, current, onToggle }: Props) {
   return (
     <section aria-labelledby="final" className="mt-14">
       <div className="flex items-center gap-4">
@@ -21,30 +21,36 @@ export function Closing({ done, onToggle }: Props) {
         <span className="h-px flex-1 bg-line/70" />
       </div>
 
-      <article className="mt-6 divide-y divide-line/60 rounded-xl border border-line/80 bg-surface px-5 sm:px-7">
+      <article
+        aria-current={current ? 'step' : undefined}
+        className={`mt-6 divide-y divide-line/60 rounded-xl border px-5 transition-colors sm:px-7 ${
+          current ? 'border-accent/65 bg-elevated' : 'border-line/75 bg-surface'
+        }`}
+      >
         <div className="py-6">
-          <PrayerText prayer={PRAYERS.salve} dimmed={done} />
+          <PrayerText
+            prayer={PRAYERS.salve}
+            dimmed={done && !current}
+            badge={current ? 'Actual' : done ? 'Completado' : undefined}
+          />
         </div>
         <div className="py-6">
-          <PrayerText prayer={PRAYERS.oracionFinal} dimmed={done} />
+          <PrayerText prayer={PRAYERS.oracionFinal} dimmed={done && !current} />
         </div>
         <div className="py-6">
-          <PrayerText prayer={PRAYERS.senal} dimmed={done} />
+          <PrayerText prayer={PRAYERS.senal} dimmed={done && !current} />
         </div>
         <div className="py-6">
           <button
             type="button"
-            role="checkbox"
-            aria-checked={done}
             onClick={onToggle}
-            className={`flex min-h-12 w-full items-center justify-center gap-2 rounded-lg border px-4 font-sans text-sm tracking-wide transition-colors ${
+            className={`flex min-h-12 w-full items-center justify-center rounded-lg border px-4 font-sans text-sm tracking-wide transition-colors ${
               done
-                ? 'border-accent bg-accent/15 text-accent'
-                : 'border-accent/55 text-accent hover:bg-accent/10'
+                ? 'border-line text-muted hover:border-accent/40 hover:text-ink'
+                : 'border-accent/55 bg-accent/10 text-accent hover:bg-accent/15'
             }`}
           >
-            <Check size={16} strokeWidth={2} aria-hidden="true" />
-            {done ? 'Rosario terminado' : 'Marcar Rosario como terminado'}
+            {done ? 'Rosario terminado' : 'Completar el Rosario'}
           </button>
         </div>
       </article>

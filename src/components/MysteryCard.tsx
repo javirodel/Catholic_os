@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Check, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import type { Mystery } from '../data/mysteries';
 import { PRAYERS } from '../data/prayers';
-import { CheckButton } from './CheckButton';
 import { PrayerText } from './PrayerText';
 
 const ROMAN = ['I', 'II', 'III', 'IV', 'V'] as const;
@@ -27,12 +26,24 @@ export function MysteryCard({ number, mystery, done, current, onToggle }: Props)
       className={`rounded-xl border transition-colors ${
         current
           ? 'border-accent/65 bg-elevated px-5 py-6 sm:px-7 sm:py-7'
-          : 'border-line/80 bg-surface px-5 py-5 sm:px-7 sm:py-6'
+          : 'border-line/75 bg-surface px-5 py-5 sm:px-7 sm:py-6'
       }`}
     >
-      {/* Cabecera del misterio */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0">
+      {/* Cabecera pulsable del misterio */}
+      <div
+        role="button"
+        tabIndex={0}
+        aria-pressed={done}
+        onClick={onToggle}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onToggle();
+          }
+        }}
+        className="cursor-pointer select-none"
+      >
+        <div className="flex items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
             <span className="font-sans text-[0.6875rem] uppercase tracking-[0.28em] text-accent">
               Misterio {roman}
@@ -40,33 +51,33 @@ export function MysteryCard({ number, mystery, done, current, onToggle }: Props)
             {mystery.reference && (
               <span className="font-serif text-sm italic text-muted">· {mystery.reference}</span>
             )}
-            {current && (
-              <span className="rounded-full border border-accent/40 bg-accent/10 px-2 py-0.5 font-sans text-[0.625rem] uppercase tracking-[0.18em] text-accent">
-                Actual
-              </span>
-            )}
           </div>
-          <h3
-            className={`mt-1.5 font-serif text-[1.4rem] font-normal leading-snug ${
-              done ? 'text-muted' : 'text-ink'
-            }`}
-          >
-            {mystery.name}
-          </h3>
+          {current ? (
+            <span className="shrink-0 rounded-full border border-accent/40 bg-accent/10 px-2.5 py-0.5 font-sans text-[0.625rem] uppercase tracking-[0.18em] text-accent">
+              Actual
+            </span>
+          ) : done ? (
+            <span className="shrink-0 rounded-full border border-line px-2.5 py-0.5 font-sans text-[0.625rem] uppercase tracking-[0.18em] text-muted">
+              Completado
+            </span>
+          ) : null}
         </div>
-        <CheckButton
-          checked={done}
-          onToggle={onToggle}
-          label={`Marcar como completado: ${number}.º misterio`}
-        />
-      </div>
 
-      {/* Meditación y pregunta personal */}
-      <div className={`mt-5 border-l-2 border-accent/35 pl-4 ${done ? 'opacity-70' : ''}`}>
-        <p className="font-serif text-[1.15rem] italic leading-[1.78] text-ink/90">
-          {mystery.reflection}
-        </p>
-        <p className="mt-3 text-[1.02rem] leading-relaxed text-muted">{mystery.question}</p>
+        <h3
+          className={`mt-1.5 font-serif text-[1.4rem] font-normal leading-snug ${
+            done && !current ? 'text-muted' : 'text-ink'
+          }`}
+        >
+          {mystery.name}
+        </h3>
+
+        {/* Meditación y pregunta personal */}
+        <div className={`mt-5 border-l-2 border-accent/35 pl-4 ${done && !current ? 'opacity-65' : ''}`}>
+          <p className="font-serif text-[1.15rem] italic leading-[1.78] text-ink/90">
+            {mystery.reflection}
+          </p>
+          <p className="mt-3 text-[1.02rem] leading-relaxed text-muted">{mystery.question}</p>
+        </div>
       </div>
 
       {/* Oraciones de la decena */}
@@ -101,13 +112,12 @@ export function MysteryCard({ number, mystery, done, current, onToggle }: Props)
             <button
               type="button"
               onClick={onToggle}
-              className={`flex min-h-11 w-full items-center justify-center gap-2 rounded-lg border px-4 font-sans text-sm tracking-wide transition-colors ${
+              className={`flex min-h-11 w-full items-center justify-center rounded-lg border px-4 font-sans text-sm tracking-wide transition-colors ${
                 done
-                  ? 'border-accent/50 bg-accent/15 text-accent'
-                  : 'border-accent/50 text-accent hover:bg-accent/10'
+                  ? 'border-line text-muted hover:border-accent/40 hover:text-ink'
+                  : 'border-accent/55 bg-accent/10 text-accent hover:bg-accent/15'
               }`}
             >
-              <Check size={16} strokeWidth={2} aria-hidden="true" />
               {done ? 'Misterio completado' : `Completar ${number}.º misterio`}
             </button>
           </div>

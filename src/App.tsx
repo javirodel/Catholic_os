@@ -4,7 +4,7 @@ import { MysteryCard } from './components/MysteryCard';
 import { Opening } from './components/Opening';
 import { ResetButton } from './components/ResetButton';
 import { getMysterySet } from './lib/date';
-import { MYSTERY_STEPS, FINAL_STEP } from './lib/progress';
+import { ALL_STEPS, MYSTERY_STEPS, FINAL_STEP } from './lib/progress';
 import { useRosary } from './lib/useRosary';
 
 const realNow = () => new Date();
@@ -17,13 +17,13 @@ interface Props {
 export default function App({ getNow = realNow }: Props) {
   const { day, doneSet, toggle, reset } = useRosary(getNow);
   const set = getMysterySet(day.weekday);
-  const currentIndex = MYSTERY_STEPS.findIndex((s) => !doneSet.has(s));
+  const currentStep = ALL_STEPS.find((s) => !doneSet.has(s));
 
   return (
     <main className="mx-auto w-full max-w-[38rem] px-5 pb-20 pt-10 sm:px-6 sm:pt-14">
       <Header dayLabel={day.label} setTitle={set.title} completed={doneSet.size} />
 
-      <Opening doneSet={doneSet} onToggle={toggle} />
+      <Opening doneSet={doneSet} currentStep={currentStep} onToggle={toggle} />
 
       <section aria-labelledby="misterios" className="mt-14">
         <div className="flex items-center gap-4">
@@ -44,14 +44,18 @@ export default function App({ getNow = realNow }: Props) {
               number={i + 1}
               mystery={m}
               done={doneSet.has(MYSTERY_STEPS[i])}
-              current={i === currentIndex}
+              current={currentStep === MYSTERY_STEPS[i]}
               onToggle={() => toggle(MYSTERY_STEPS[i])}
             />
           ))}
         </div>
       </section>
 
-      <Closing done={doneSet.has(FINAL_STEP)} onToggle={() => toggle(FINAL_STEP)} />
+      <Closing
+        done={doneSet.has(FINAL_STEP)}
+        current={currentStep === FINAL_STEP}
+        onToggle={() => toggle(FINAL_STEP)}
+      />
 
       <footer className="mt-14 border-t border-line/60 pt-8 text-center">
         <ResetButton onConfirm={reset} />

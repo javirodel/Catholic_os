@@ -1,9 +1,9 @@
 import { PRAYERS } from '../data/prayers';
-import { CheckButton } from './CheckButton';
 import { PrayerText } from './PrayerText';
 
 interface Props {
   doneSet: Set<string>;
+  currentStep?: string;
   onToggle: (step: string) => void;
 }
 
@@ -19,7 +19,7 @@ const ITEMS = [
   { step: 'inicio-gloria', prayer: PRAYERS.gloria, note: undefined },
 ] as const;
 
-export function Opening({ doneSet, onToggle }: Props) {
+export function Opening({ doneSet, currentStep, onToggle }: Props) {
   return (
     <section aria-labelledby="inicio" className="mt-12">
       <div className="flex items-center gap-4">
@@ -33,22 +33,35 @@ export function Opening({ doneSet, onToggle }: Props) {
         <span className="h-px flex-1 bg-line/70" />
       </div>
 
-      <div className="mt-6 divide-y divide-line/60 rounded-xl border border-line/80 bg-surface px-5 sm:px-7">
+      <div className="mt-6 space-y-3.5">
         {ITEMS.map(({ step, prayer, note }) => {
           const isDone = doneSet.has(step);
+          const isCurrent = currentStep === step;
           return (
-            <article key={step} className="py-6 first:pt-6 last:pb-6">
+            <article
+              key={step}
+              role="button"
+              tabIndex={0}
+              aria-pressed={isDone}
+              aria-current={isCurrent ? 'step' : undefined}
+              onClick={() => onToggle(step)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onToggle(step);
+                }
+              }}
+              className={`cursor-pointer select-none rounded-xl border px-5 py-5 transition-colors sm:px-7 sm:py-6 ${
+                isCurrent
+                  ? 'border-accent/65 bg-elevated'
+                  : 'border-line/75 bg-surface hover:border-line'
+              }`}
+            >
               <PrayerText
                 prayer={prayer}
                 note={note}
-                dimmed={isDone}
-                action={
-                  <CheckButton
-                    checked={isDone}
-                    onToggle={() => onToggle(step)}
-                    label={`Marcar como rezado: ${prayer.title}`}
-                  />
-                }
+                dimmed={isDone && !isCurrent}
+                badge={isCurrent ? 'Actual' : isDone ? 'Completado' : undefined}
               />
             </article>
           );
