@@ -7,95 +7,64 @@ import { PrayerText } from './PrayerText';
 const ROMAN = ['I', 'II', 'III', 'IV', 'V'] as const;
 
 interface Props {
+  step: string;
   number: number;
   mystery: Mystery;
-  done: boolean;
-  current: boolean;
-  onToggle: () => void;
+  active: boolean;
+  onSelect: () => void;
 }
 
-export function MysteryCard({ number, mystery, done, current, onToggle }: Props) {
+export function MysteryCard({ step, number, mystery, active, onSelect }: Props) {
   const [showPrayers, setShowPrayers] = useState(false);
-  const prayersExpanded = current || showPrayers;
   const roman = ROMAN[number - 1] ?? String(number);
 
   return (
     <article
-      aria-current={current ? 'step' : undefined}
-      data-current={current}
-      className={`rounded-xl border transition-colors ${
-        current
-          ? 'border-accent/65 bg-elevated px-5 py-6 sm:px-7 sm:py-7'
-          : 'border-line/75 bg-surface px-5 py-5 sm:px-7 sm:py-6'
+      data-step={step}
+      data-active={active}
+      onClick={onSelect}
+      className={`rounded-xl border px-5 py-5 transition-colors duration-300 sm:px-7 sm:py-6 ${
+        active ? 'border-accent/65 bg-elevated' : 'border-line/70 bg-surface'
       }`}
     >
-      {/* Cabecera pulsable del misterio */}
-      <div
-        role="button"
-        tabIndex={0}
-        aria-pressed={done}
-        onClick={onToggle}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            onToggle();
-          }
-        }}
-        className="cursor-pointer select-none"
-      >
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
-            <span className="font-sans text-[0.6875rem] uppercase tracking-[0.28em] text-accent">
-              Misterio {roman}
-            </span>
-            {mystery.reference && (
-              <span className="font-serif text-sm italic text-muted">· {mystery.reference}</span>
-            )}
-          </div>
-          {current ? (
-            <span className="shrink-0 rounded-full border border-accent/40 bg-accent/10 px-2.5 py-0.5 font-sans text-[0.625rem] uppercase tracking-[0.18em] text-accent">
-              Actual
-            </span>
-          ) : done ? (
-            <span className="shrink-0 rounded-full border border-line px-2.5 py-0.5 font-sans text-[0.625rem] uppercase tracking-[0.18em] text-muted">
-              Completado
-            </span>
-          ) : null}
-        </div>
-
-        <h3
-          className={`mt-1.5 font-serif text-[1.2rem] font-normal leading-snug ${
-            done && !current ? 'text-muted' : 'text-ink'
-          }`}
-        >
-          {mystery.name}
-        </h3>
-
-        {/* Meditación y pregunta personal */}
-        <div className={`mt-5 border-l-2 border-accent/35 pl-4 ${done && !current ? 'opacity-65' : ''}`}>
-          <p className="font-serif text-[1.15rem] italic leading-[1.78] text-ink/90">
-            {mystery.reflection}
-          </p>
-          <p className="mt-3 text-[1.02rem] leading-relaxed text-muted">{mystery.question}</p>
-        </div>
+      <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+        <span className="font-sans text-[0.65rem] uppercase tracking-[0.28em] text-accent">
+          Misterio {roman}
+        </span>
+        {mystery.reference && (
+          <span className="font-serif text-sm italic text-muted">· {mystery.reference}</span>
+        )}
       </div>
 
-      {/* Oraciones de la decena */}
-      {prayersExpanded ? (
-        <div className="mt-6 divide-y divide-line/60 border-t border-line/80 pt-5">
-          {!current && (
-            <div className="pb-4">
-              <button
-                type="button"
-                onClick={() => setShowPrayers(false)}
-                className="inline-flex items-center gap-1.5 font-sans text-xs tracking-wider text-muted hover:text-ink"
-              >
-                <ChevronDown size={14} className="rotate-180" aria-hidden="true" />
-                Ocultar oraciones de la decena
-              </button>
-            </div>
-          )}
-          <div className="py-4 first:pt-0">
+      <h3 className="mt-1.5 font-serif text-[1.15rem] font-normal leading-snug text-ink">
+        {mystery.name}
+      </h3>
+
+      {/* Meditación y pregunta personal */}
+      <div className="mt-4 border-l border-accent/40 pl-4">
+        <p className="font-serif text-[1.1rem] italic leading-[1.78] text-ink/90">
+          {mystery.reflection}
+        </p>
+        <p className="mt-2.5 text-[1rem] leading-relaxed text-muted">{mystery.question}</p>
+      </div>
+
+      {/* Oraciones de la decena (desplegables opcionales) */}
+      {showPrayers ? (
+        <div className="mt-5 divide-y divide-line/60 border-t border-line/75 pt-4">
+          <div className="pb-3">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowPrayers(false);
+              }}
+              className="inline-flex items-center gap-1.5 font-sans text-xs tracking-wider text-muted hover:text-ink"
+            >
+              <ChevronDown size={14} className="rotate-180" aria-hidden="true" />
+              Ocultar oraciones de la decena
+            </button>
+          </div>
+          <div className="py-4">
             <PrayerText prayer={PRAYERS.padrenuestro} compact />
           </div>
           <div className="py-4">
@@ -107,29 +76,18 @@ export function MysteryCard({ number, mystery, done, current, onToggle }: Props)
           <div className="pt-4">
             <PrayerText prayer={PRAYERS.fatima} note="Opcional" compact />
           </div>
-
-          <div className="mt-6 pt-5">
-            <button
-              type="button"
-              onClick={onToggle}
-              className={`flex min-h-11 w-full items-center justify-center rounded-lg border px-4 font-sans text-sm tracking-wide transition-colors ${
-                done
-                  ? 'border-line text-muted hover:border-accent/40 hover:text-ink'
-                  : 'border-accent/55 bg-accent/10 text-accent hover:bg-accent/15'
-              }`}
-            >
-              {done ? 'Misterio completado' : `Completar ${number}.º misterio`}
-            </button>
-          </div>
         </div>
       ) : (
-        <div className="mt-5 flex items-center justify-between gap-3 border-t border-line/60 pt-4">
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-line/60 pt-3.5">
           <p className="font-serif text-sm italic text-muted">
             Padrenuestro · 10 Avemarías · Gloria · Fátima
           </p>
           <button
             type="button"
-            onClick={() => setShowPrayers(true)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowPrayers(true);
+            }}
             className="inline-flex shrink-0 items-center gap-1 font-sans text-xs tracking-wider text-accent hover:underline"
           >
             Ver oraciones

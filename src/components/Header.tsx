@@ -1,15 +1,12 @@
-import { TOTAL_STEPS } from '../lib/progress';
-
 interface Props {
   dayLabel: string;
   setTitle: string;
-  completed: number;
 }
 
-export function Header({ dayLabel, setTitle, completed }: Props) {
+export function Header({ dayLabel, setTitle }: Props) {
   return (
     <header className="border-b border-line/60 pb-6 pt-1 text-center">
-      <div className="mx-auto mb-3.5 flex flex-col items-center">
+      <div className="mx-auto mb-3 flex flex-col items-center">
         <svg
           aria-hidden="true"
           viewBox="0 0 24 24"
@@ -26,14 +23,10 @@ export function Header({ dayLabel, setTitle, completed }: Props) {
         </p>
       </div>
 
-      <p className="font-serif text-[0.9375rem] italic text-muted">{dayLabel}</p>
-      <h1 className="mt-1 font-serif text-[1.35rem] font-normal tracking-wide text-ink">
+      <p className="font-serif text-[0.95rem] italic text-muted">{dayLabel}</p>
+      <h1 className="mt-1 font-serif text-[1.15rem] font-normal tracking-wide text-ink">
         {setTitle}
       </h1>
-
-      <p className="mt-3 font-sans text-[0.6875rem] tracking-wider text-muted/85">
-        {completed} de {TOTAL_STEPS}
-      </p>
     </header>
   );
 }

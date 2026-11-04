@@ -2,9 +2,8 @@ import { PRAYERS } from '../data/prayers';
 import { PrayerText } from './PrayerText';
 
 interface Props {
-  doneSet: Set<string>;
-  currentStep?: string;
-  onToggle: (step: string) => void;
+  activeStep: string;
+  onSelect: (step: string) => void;
 }
 
 const ITEMS = [
@@ -19,50 +18,34 @@ const ITEMS = [
   { step: 'inicio-gloria', prayer: PRAYERS.gloria, note: undefined },
 ] as const;
 
-export function Opening({ doneSet, currentStep, onToggle }: Props) {
+export function Opening({ activeStep, onSelect }: Props) {
   return (
-    <section aria-labelledby="inicio" className="mt-12">
+    <section aria-labelledby="inicio" className="mt-10">
       <div className="flex items-center gap-4">
         <span className="h-px flex-1 bg-line/70" />
         <h2
           id="inicio"
-          className="font-sans text-[0.6875rem] uppercase tracking-[0.32em] text-accent"
+          className="font-sans text-[0.65rem] uppercase tracking-[0.32em] text-accent"
         >
           Oraciones iniciales
         </h2>
         <span className="h-px flex-1 bg-line/70" />
       </div>
 
-      <div className="mt-6 space-y-3.5">
+      <div className="mt-5 space-y-3.5">
         {ITEMS.map(({ step, prayer, note }) => {
-          const isDone = doneSet.has(step);
-          const isCurrent = currentStep === step;
+          const isActive = activeStep === step;
           return (
             <article
               key={step}
-              role="button"
-              tabIndex={0}
-              aria-pressed={isDone}
-              aria-current={isCurrent ? 'step' : undefined}
-              onClick={() => onToggle(step)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  onToggle(step);
-                }
-              }}
-              className={`cursor-pointer select-none rounded-xl border px-5 py-5 transition-colors sm:px-7 sm:py-6 ${
-                isCurrent
-                  ? 'border-accent/65 bg-elevated'
-                  : 'border-line/75 bg-surface hover:border-line'
+              data-step={step}
+              data-active={isActive}
+              onClick={() => onSelect(step)}
+              className={`rounded-xl border px-5 py-5 transition-colors duration-300 sm:px-7 sm:py-6 ${
+                isActive ? 'border-accent/65 bg-elevated' : 'border-line/70 bg-surface'
               }`}
             >
-              <PrayerText
-                prayer={prayer}
-                note={note}
-                dimmed={isDone && !isCurrent}
-                badge={isCurrent ? 'Actual' : isDone ? 'Completado' : undefined}
-              />
+              <PrayerText prayer={prayer} note={note} />
             </article>
           );
         })}
