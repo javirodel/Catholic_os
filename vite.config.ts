@@ -3,15 +3,10 @@ import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
-// Tipado mínimo de process (evita depender de @types/node).
-declare const process: { env: Record<string, string | undefined> };
-
-// En GitHub Pages el sitio vive en /<repositorio>/. El workflow pasa BASE_PATH.
-const base = process.env.BASE_PATH || '/';
-
 export default defineConfig({
-  base,
+  base: './',
   build: {
+    outDir: 'docs',
     sourcemap: false,
   },
   plugins: [
@@ -21,13 +16,12 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
-        id: base,
         name: 'Mi Rosario',
         short_name: 'Rosario',
         description: 'Rosario personal, sencillo y sin conexión.',
         lang: 'es-ES',
-        start_url: base,
-        scope: base,
+        start_url: './',
+        scope: './',
         display: 'standalone',
         orientation: 'portrait',
         theme_color: '#090A0D',
@@ -44,7 +38,6 @@ export default defineConfig({
         clientsClaim: true,
         skipWaiting: true,
         navigateFallback: 'index.html',
-        // Sin runtimeCaching: sólo se cachean los archivos propios del build.
       },
     }),
   ],
