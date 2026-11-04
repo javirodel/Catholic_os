@@ -1,19 +1,103 @@
+export type PrayerId =
+  | 'senal'
+  | 'credo'
+  | 'padrenuestro'
+  | 'avemaria'
+  | 'gloria'
+  | 'fatima'
+  | 'salve'
+  | 'oracionFinal';
+
+export interface Prayer {
+  id: PrayerId;
+  title: string;
+  paragraphs: string[];
+}
+
+export const PRAYERS: Record<PrayerId, Prayer> = {
+  senal: {
+    id: 'senal',
+    title: 'Señal de la cruz',
+    paragraphs: [
+      'Por la señal de la Santa Cruz, de nuestros enemigos líbranos, Señor, Dios nuestro.',
+      'En el nombre del Padre, y del Hijo, y del Espíritu Santo. Amén.',
+    ],
+  },
+  credo: {
+    id: 'credo',
+    title: 'Credo de los Apóstoles',
+    paragraphs: [
+      'Creo en Dios, Padre todopoderoso, creador del cielo y de la tierra.',
+      'Creo en Jesucristo, su único Hijo, nuestro Señor, que fue concebido por obra y gracia del Espíritu Santo, nació de Santa María Virgen, padeció bajo el poder de Poncio Pilato, fue crucificado, muerto y sepultado, descendió a los infiernos, al tercer día resucitó de entre los muertos, subió a los cielos y está sentado a la derecha de Dios, Padre todopoderoso.',
+      'Desde allí ha de venir a juzgar a vivos y muertos.',
+      'Creo en el Espíritu Santo, la santa Iglesia católica, la comunión de los santos, el perdón de los pecados, la resurrección de la carne y la vida eterna. Amén.',
+    ],
+  },
+  padrenuestro: {
+    id: 'padrenuestro',
+    title: 'Padrenuestro',
+    paragraphs: [
+      'Padre nuestro, que estás en el cielo, santificado sea tu Nombre; venga a nosotros tu reino; hágase tu voluntad en la tierra como en el cielo.',
+      'Danos hoy nuestro pan de cada día; perdona nuestras ofensas, como también nosotros perdonamos a los que nos ofenden; no nos dejes caer en la tentación y líbranos del mal. Amén.',
+    ],
+  },
+  avemaria: {
+    id: 'avemaria',
+    title: 'Avemaría',
+    paragraphs: [
+      'Dios te salve, María, llena eres de gracia, el Señor es contigo.',
+      'Bendita tú eres entre todas las mujeres y bendito es el fruto de tu vientre, Jesús.',
+      'Santa María, Madre de Dios, ruega por nosotros, pecadores, ahora y en la hora de nuestra muerte. Amén.',
+    ],
+  },
+  gloria: {
+    id: 'gloria',
+    title: 'Gloria',
+    paragraphs: [
+      'Gloria al Padre, y al Hijo, y al Espíritu Santo.',
+      'Como era en el principio, ahora y siempre, por los siglos de los siglos. Amén.',
+    ],
+  },
+  fatima: {
+    id: 'fatima',
+    title: 'Oración de Fátima',
+    paragraphs: [
+      'Oh Jesús mío, perdona nuestros pecados, líbranos del fuego del infierno, lleva al cielo a todas las almas, especialmente a las más necesitadas de tu misericordia. Amén.',
+    ],
+  },
+  salve: {
+    id: 'salve',
+    title: 'Salve',
+    paragraphs: [
+      'Dios te salve, Reina y Madre de misericordia, vida, dulzura y esperanza nuestra; Dios te salve.',
+      'A ti llamamos los desterrados hijos de Eva; a ti suspiramos, gimiendo y llorando en este valle de lágrimas.',
+      'Ea, pues, Señora, abogada nuestra, vuelve a nosotros esos tus ojos misericordiosos; y después de este destierro, muéstranos a Jesús, fruto bendito de tu vientre.',
+      '¡Oh clementísima, oh piadosa, oh dulce siempre Virgen María!',
+      'Ruega por nosotros, Santa Madre de Dios, para que seamos dignos de alcanzar las promesas de Nuestro Señor Jesucristo. Amén.',
+    ],
+  },
+  oracionFinal: {
+    id: 'oracionFinal',
+    title: 'Oración final',
+    paragraphs: [
+      'Oh Dios, cuyo Hijo unigénito, con su vida, muerte y resurrección, nos alcanzó los premios de la vida eterna, concédenos a los que meditamos los misterios del Santísimo Rosario de la bienaventurada Virgen María, imitar lo que contienen y alcanzar lo que prometen. Por Jesucristo nuestro Señor. Amén.',
+    ],
+  },
+};
+
 export type MysterySetId = 'gozosos' | 'dolorosos' | 'gloriosos' | 'luminosos';
 
 export interface Mystery {
   name: string;
-  /** Referencia bíblica del episodio, cuando existe un pasaje directo. */
   reference?: string;
-  /** Reflexión breve (1–3 frases). */
   reflection: string;
-  /** Pregunta personal opcional. */
   question: string;
 }
 
 export interface MysterySet {
   id: MysterySetId;
   title: string;
-  mysteries: Mystery[]; // siempre 5
+  mysteries: Mystery[];
 }
 
 export const MYSTERY_SETS: Record<MysterySetId, MysterySet> = {
@@ -180,3 +264,60 @@ export const MYSTERY_SETS: Record<MysterySetId, MysterySet> = {
     ],
   },
 };
+
+const TIME_ZONE = 'Europe/Madrid';
+type Weekday = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+
+const WEEKDAY_INDEX: Record<string, Weekday> = {
+  Sun: 0,
+  Mon: 1,
+  Tue: 2,
+  Wed: 3,
+  Thu: 4,
+  Fri: 5,
+  Sat: 6,
+};
+
+const SET_BY_WEEKDAY: Record<Weekday, MysterySetId> = {
+  0: 'gloriosos',
+  1: 'gozosos',
+  2: 'dolorosos',
+  3: 'gloriosos',
+  4: 'luminosos',
+  5: 'dolorosos',
+  6: 'gozosos',
+};
+
+const partsFormatter = new Intl.DateTimeFormat('en-US', {
+  timeZone: TIME_ZONE,
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  weekday: 'short',
+});
+
+const weekdayFormatter = new Intl.DateTimeFormat('es-ES', {
+  timeZone: TIME_ZONE,
+  weekday: 'long',
+});
+
+const dayMonthFormatter = new Intl.DateTimeFormat('es-ES', {
+  timeZone: TIME_ZONE,
+  day: 'numeric',
+  month: 'long',
+});
+
+export function getTodayRosary(now: Date = new Date()) {
+  const parts: Record<string, string> = {};
+  for (const p of partsFormatter.formatToParts(now)) parts[p.type] = p.value;
+
+  const weekday = WEEKDAY_INDEX[parts.weekday];
+  const weekdayName = weekdayFormatter.format(now);
+  const capitalized = weekdayName.charAt(0).toUpperCase() + weekdayName.slice(1);
+
+  return {
+    key: `${parts.year}-${parts.month}-${parts.day}`,
+    label: `${capitalized}, ${dayMonthFormatter.format(now)}`,
+    set: MYSTERY_SETS[SET_BY_WEEKDAY[weekday]],
+  };
+}
