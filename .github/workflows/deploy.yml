@@ -28,7 +28,7 @@ jobs:
           cache: npm
 
       - id: pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       # npm ci: instala exactamente lo de package-lock.json, sin scripts de instalación.
       - run: npm ci --ignore-scripts --no-audit --no-fund
