@@ -22,7 +22,7 @@ export function Header({ dayLabel, setTitle, completed }: Props) {
           <path d="M12 3v18M6.5 8.5h11" />
         </svg>
         <p className="mt-3 font-sans text-[0.6875rem] uppercase tracking-[0.38em] text-accent">
-          Mi Rosario
+          Catholic OS
         </p>
       </div>
 

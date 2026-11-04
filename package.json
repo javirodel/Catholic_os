@@ -1,7 +1,7 @@
 {
   "name": "catholic-os",
   "version": "1.0.0",
-  "description": "Mi Rosario - PWA personal",
+  "description": "Catholic OS - PWA personal",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",

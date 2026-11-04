@@ -16,8 +16,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Mi Rosario',
-        short_name: 'Rosario',
+        name: 'Catholic OS',
+        short_name: 'Catholic OS',
         description: 'Rosario personal, sencillo y sin conexión.',
         lang: 'es-ES',
         start_url: './',

@@ -1,4 +1,4 @@
-# Mi Rosario
+# Catholic OS
 
 Aplicación web personal (PWA) para el rezo del Santo Rosario.
 
