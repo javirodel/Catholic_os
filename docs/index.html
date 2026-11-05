@@ -1,10 +1,20 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#090A0D" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#000000" id="theme-color-meta" />
+    <script>
+      (function() {
+        try {
+          var t = localStorage.getItem('catholic-os:theme') || 'dark';
+          document.documentElement.setAttribute('data-theme', t);
+          var m = document.getElementById('theme-color-meta');
+          if (m) m.content = t === 'light' ? '#f9f8f5' : '#000000';
+        } catch(e) {}
+      })();
+    </script>
     <meta name="robots" content="noindex, nofollow" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -13,8 +23,8 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <title>Catholic OS</title>
-    <script type="module" crossorigin src="./assets/index-C_Os_YPB.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-Da7iVmKh.css">
+    <script type="module" crossorigin src="./assets/index-BHsmplw9.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DQAvQ2Ej.css">
   <link rel="manifest" href="./manifest.webmanifest"></head>
   <body>
     <div id="root"></div>

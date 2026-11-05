@@ -2,7 +2,82 @@ import { useEffect, useState } from 'react';
 import { getTodayRosary, PRAYERS, type Mystery, type Prayer } from './rosary';
 
 const STORAGE_PREFIX = 'catholic-os:rosario:';
+const THEME_STORAGE_KEY = 'catholic-os:theme';
 const ROMAN = ['I', 'II', 'III', 'IV', 'V'] as const;
+
+export type Theme = 'dark' | 'light';
+
+function getInitialTheme(): Theme {
+  try {
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    if (saved === 'light' || saved === 'dark') return saved;
+  } catch {
+    // ignorar
+  }
+  return 'dark';
+}
+
+function ThemeToggle({
+  theme,
+  onToggle,
+}: {
+  theme: Theme;
+  onToggle: () => void;
+}) {
+  const isDark = theme === 'dark';
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-label={
+        isDark
+          ? 'Modo oscuro (negro puro) activo. Cambiar a modo claro'
+          : 'Modo claro activo. Cambiar a modo oscuro (negro puro)'
+      }
+      title={
+        isDark
+          ? 'Modo oscuro (negro puro OLED) activo. Clic para modo claro'
+          : 'Modo claro activo. Clic para modo oscuro (negro puro OLED)'
+      }
+      className="inline-flex items-center gap-1.5 rounded-full border border-line/80 bg-surface px-2.5 py-1 text-[0.6875rem] font-sans tracking-wide text-muted transition-colors duration-200 hover:border-accent/60 hover:text-ink active:scale-95"
+    >
+      {isDark ? (
+        <>
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            className="h-3.5 w-3.5 text-accent"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+          </svg>
+          <span className="font-medium">Negro puro</span>
+        </>
+      ) : (
+        <>
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 24 24"
+            className="h-3.5 w-3.5 text-accent"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.75"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="4" />
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
+          </svg>
+          <span className="font-medium">Modo claro</span>
+        </>
+      )}
+    </button>
+  );
+}
 
 const INITIAL_ITEMS = [
   { step: 'inicio-senal', prayer: PRAYERS.senal, note: undefined },
@@ -166,6 +241,7 @@ function MysteryItem({
 }
 
 export default function App() {
+  const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [today, setToday] = useState(() => getTodayRosary());
   const [activeStep, setActiveStep] = useState<string>(() => {
     const d = getTodayRosary();
@@ -176,6 +252,37 @@ export default function App() {
       return 'inicio-senal';
     }
   });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    const metaTheme = document.getElementById('theme-color-meta');
+    if (metaTheme) {
+      metaTheme.setAttribute('content', theme === 'light' ? '#f9f8f5' : '#000000');
+    }
+    const metaScheme = document.querySelector('meta[name="color-scheme"]');
+    if (metaScheme) {
+      metaScheme.setAttribute('content', theme === 'light' ? 'light' : 'dark');
+    }
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, theme);
+    } catch {
+      // ignorar
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === THEME_STORAGE_KEY && (e.newValue === 'light' || e.newValue === 'dark')) {
+        setTheme(e.newValue);
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   useEffect(() => {
     const check = () => {
@@ -247,6 +354,10 @@ export default function App() {
   return (
     <main className="mx-auto w-full max-w-[38rem] px-5 pb-24 pt-8 sm:px-6 sm:pt-12">
       <header className="border-b border-line/60 pb-6 pt-1 text-center">
+        <div className="mb-3 flex items-center justify-end">
+          <ThemeToggle theme={theme} onToggle={toggleTheme} />
+        </div>
+
         <div className="mx-auto mb-3 flex flex-col items-center">
           <svg
             aria-hidden="true"
@@ -332,6 +443,15 @@ export default function App() {
           </div>
         </article>
       </section>
+
+      <footer className="mt-14 border-t border-line/50 pt-6 text-center">
+        <div className="flex items-center justify-center">
+          <ThemeToggle theme={theme} onToggle={toggleTheme} />
+        </div>
+        <p className="mt-3 font-sans text-[0.625rem] uppercase tracking-[0.25em] text-muted">
+          A.M.D.G.
+        </p>
+      </footer>
     </main>
   );
 }

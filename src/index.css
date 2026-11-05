@@ -1,21 +1,50 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-bg: #090a0d;
-  --color-surface: #111216;
-  --color-elevated: #18191e;
-  --color-ink: #f1f0eb;
-  --color-muted: #a5a39d;
-  --color-line: #292a2e;
-  --color-accent: #b6a078;
+  --color-bg: #000000;
+  --color-surface: #000000;
+  --color-elevated: #000000;
+  --color-ink: #d4d0c8;
+  --color-muted: #7a7870;
+  --color-line: #1a1a1a;
+  --color-accent: #b89c6f;
 
   --font-serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
   --font-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
+:root {
+  color-scheme: dark;
+  scrollbar-color: var(--color-line) var(--color-bg);
+}
+
+html[data-theme='light'],
+:root:has(> head > meta[name="color-scheme"][content="light"]) {
+  color-scheme: light;
+  --color-bg: #f9f8f5;
+  --color-surface: #ffffff;
+  --color-elevated: #f0ede4;
+  --color-ink: #1c1b18;
+  --color-muted: #6f6c64;
+  --color-line: #e3dfd5;
+  --color-accent: #8e6c38;
+}
+
+html[data-theme='dark'],
+:root:has(> head > meta[name="color-scheme"][content="dark"]) {
+  color-scheme: dark;
+  --color-bg: #000000;
+  --color-surface: #000000;
+  --color-elevated: #000000;
+  --color-ink: #d4d0c8;
+  --color-muted: #7a7870;
+  --color-line: #1a1a1a;
+  --color-accent: #b89c6f;
+}
+
 html {
   background: var(--color-bg);
-  color-scheme: dark;
+  color: var(--color-ink);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
@@ -34,6 +63,12 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-bg);
 }
 
 @layer base {
